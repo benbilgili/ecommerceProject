@@ -29,7 +29,7 @@ public class Hooks {
         return this.baseUrl;
     }
 
-    @Before()                                                     // POTENTIALLY MOVE THE LOGIN AND BANNER DISMISS TO BEFORE!
+    @Before()
     public void setUp() {
         String browser = System.getProperty("BROWSER");
         if(browser==null){browser="";}
