@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OnlinePurchaseSteps {
 
     private WebDriver driver;
-    private String baseUrl;
     private double initialCost;
     private double totalReduction;
     private String previousOrderNumber;
@@ -28,24 +27,12 @@ public class OnlinePurchaseSteps {
     public OnlinePurchaseSteps(SharedDictionary sharedDict) { // takes shared dict only --------- UPDATE ME
         this.sharedDict = sharedDict;
         this.driver = (WebDriver)sharedDict.readDict("mydriver");// (WebDriver) > get the object as a WebDriver
-        this.baseUrl = (String)sharedDict.readDict("baseUrl");
     }
 
-    @Given("I am on the ecommerce login page")
-    public void i_am_on_the_ecommerce_web_page() {
-        driver.get(baseUrl);
-    }
-
-    @Given("I have logged in using {string} and {string}")
-    public void i_have_logged_in_using_and(String username, String password) {
-        MyAccountPOM myAccount = new MyAccountPOM(driver);
-        myAccount.login(username, password);
-    }
 
     @When("I add an {string} to my basket")
     public void i_add_an_to_my_basket(String searchTerm) {
         pom_pages.HomepagePOM home = new HomepagePOM(driver); // why does it insist on pom_pages.HomepagePOM
-        home.acceptCookies();
         home.typeSearchBox(searchTerm);
 
         SearchResultPOM search = new SearchResultPOM(driver);
@@ -61,25 +48,14 @@ public class OnlinePurchaseSteps {
 
         CartPOM cart = new CartPOM(driver);
         initialCost = cart.findSubTotal();
-        System.out.println("initial cost: " + initialCost);
-        // get value of product here first (set as normal cost) - need to share it with next step (add to SharedDict?)
         cart.enterCouponCode("edgewords");
         totalReduction = cart.findReduction();
-        System.out.println("cost after coupon: " + totalReduction);
     }
 
     @Then("The price should be reduced by 15%")
     public void the_price_should_be_reduced_by() {
         double expectedCostAfterReduction = (initialCost - totalReduction);
-        System.out.println("Expected cost after reduction: " + expectedCostAfterReduction);
         assertEquals(expectedCostAfterReduction, (initialCost * 0.85), 0.001);
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
 
@@ -100,7 +76,7 @@ public class OnlinePurchaseSteps {
         checkout.completeCheckout("Ben", "Bilgili", "46 The Road", "Edinburgh", "EH45 9BH", "07753456278", "ben.bilgili@2itesting.com");
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) { // need to find something better. Wait for an element on the next page to be available?
             throw new RuntimeException(e);
         }
@@ -115,17 +91,8 @@ public class OnlinePurchaseSteps {
         MyAccountPOM myAccount = new MyAccountPOM(driver);
         myAccount.goToOrders();
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-
         String newestOrderNumber = myAccount.getPreviousOrderNumber();
 
-//        System.out.println("Previous Order Number (OLD)" + previousOrderNumber);
-//        System.out.println("Newest Order Number (NEW)" + newestOrderNumber);
 
         assertNotEquals(previousOrderNumber, newestOrderNumber); // we assert that the top order number has changed, confirming that a new order has been made
 

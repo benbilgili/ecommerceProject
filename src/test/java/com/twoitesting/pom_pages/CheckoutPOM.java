@@ -68,15 +68,15 @@ public class CheckoutPOM {
         emailField.sendKeys(emailAddress);
 
         try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) { // find a way to bypass
+            Thread.sleep(2000);
+        } catch (InterruptedException e) { // need to find something better. Wait for an element on the next page to be available?
             throw new RuntimeException(e);
         }
 
         waitForElementToBeClickable(driver, By.cssSelector("button#place_order"), 5);
         placeOrderButton.click();
 
-        waitForElementToBeClickable(driver, By.cssSelector(".entry-title"), 3);
+        waitForElementToBeClickable(driver, By.cssSelector(".entry-title"), 5);
     }
 
 

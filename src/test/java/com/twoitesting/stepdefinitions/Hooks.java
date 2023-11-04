@@ -1,6 +1,7 @@
 package com.twoitesting.stepdefinitions;
 
 import com.twoitesting.SharedDictionary;
+import com.twoitesting.pom_pages.MyAccountPOM;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import org.openqa.selenium.WebDriver;
@@ -28,7 +29,7 @@ public class Hooks {
         return this.baseUrl;
     }
 
-    @Before()
+    @Before()                                                     // POTENTIALLY MOVE THE LOGIN AND BANNER DISMISS TO BEFORE!
     public void setUp() {
         String browser = System.getProperty("BROWSER");
         if(browser==null){browser="";}
@@ -46,6 +47,12 @@ public class Hooks {
         }
         sharedDict.addDict("mydriver", driver);
         sharedDict.addDict("baseUrl", baseUrl);
+
+        driver.get(baseUrl);
+        MyAccountPOM myAccount = new MyAccountPOM(driver);
+        myAccount.login("ben.bilgili@2itesting.com", "DavidRaya15");
+        pom_pages.HomepagePOM home = new pom_pages.HomepagePOM(driver); // why does it insist on pom_pages.HomepagePOM
+        home.acceptCookies();
     }
 
     @After
