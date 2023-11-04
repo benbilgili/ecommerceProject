@@ -53,6 +53,7 @@ public class Hooks {
         myAccount.login("ben.bilgili@2itesting.com", "DavidRaya15");
         pom_pages.HomepagePOM home = new pom_pages.HomepagePOM(driver); // why does it insist on pom_pages.HomepagePOM
         home.acceptCookies();
+
     }
 
     @After
